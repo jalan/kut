@@ -46,11 +46,18 @@ func (c *Cutter) isIncluded(colNum int) bool {
 // Scan advances one record on the input, outputting only the columns specified
 // in Ranges. If there is no input left to read, Scan returns io.EOF.
 func (c *Cutter) Scan() error {
+	err := c.scan()
+	if err != nil {
+		return err
+	}
+	return c.flush()
+}
+
+func (c *Cutter) scan() error {
 	inputRecord, err := c.i.Read()
 	if err != nil {
 		return err
 	}
-
 	var outputRecord []string
 	for i, value := range inputRecord {
 		colNum := i + 1 // column numbers begin at 1
@@ -58,11 +65,10 @@ func (c *Cutter) Scan() error {
 			outputRecord = append(outputRecord, value)
 		}
 	}
+	return c.o.Write(outputRecord)
+}
 
-	err = c.o.Write(outputRecord)
-	if err != nil {
-		return err
-	}
+func (c *Cutter) flush() error {
 	c.o.Flush()
 	return c.o.Error()
 }
