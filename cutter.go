@@ -13,6 +13,9 @@ type ColRange struct {
 	End   int
 }
 
+// EOL can be used as the End in a ColRange to include all remaining columns.
+const EOL = int(^uint(0) >> 1)
+
 // A Cutter reads from an input CSV file and writes only the specified columns
 // to an output file.
 type Cutter struct {
@@ -31,10 +34,37 @@ func NewCutter(r io.Reader, w io.Writer) *Cutter {
 	return c
 }
 
+func (c *Cutter) isIncluded(colNum int) bool {
+	for _, r := range c.Ranges {
+		if colNum >= r.Start && colNum <= r.End {
+			return true
+		}
+	}
+	return false
+}
+
 // Scan advances one record on the input, outputting only the columns specified
 // in Ranges. If there is no input left to read, Scan returns io.EOF.
 func (c *Cutter) Scan() error {
-	return nil
+	inputRecord, err := c.i.Read()
+	if err != nil {
+		return err
+	}
+
+	var outputRecord []string
+	for i, value := range inputRecord {
+		colNum := i + 1 // column numbers begin at 1
+		if c.isIncluded(colNum) {
+			outputRecord = append(outputRecord, value)
+		}
+	}
+
+	err = c.o.Write(outputRecord)
+	if err != nil {
+		return err
+	}
+	c.o.Flush()
+	return c.o.Error()
 }
 
 // ScanAll advances to the end of the input, outputting only the columns
