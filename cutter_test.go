@@ -7,10 +7,7 @@ import (
 )
 
 func TestNewCutter(t *testing.T) {
-	i := new(bytes.Buffer)
-	o := new(bytes.Buffer)
-	c := NewCutter(i, o)
-	if c == nil {
+	if c := NewCutter(new(bytes.Buffer), new(bytes.Buffer)); c == nil {
 		t.Errorf("NewCutter returned nil")
 	}
 }
