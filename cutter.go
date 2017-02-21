@@ -77,5 +77,14 @@ func (c *Cutter) flush() error {
 // specified in Ranges. Because ScanAll deliberately reads until EOF, it does
 // not report EOF as an error.
 func (c *Cutter) ScanAll() error {
-	return nil
+	for {
+		err := c.scan()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+	}
+	return c.flush()
 }

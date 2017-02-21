@@ -45,3 +45,27 @@ func TestScan(t *testing.T) {
 		}
 	}
 }
+
+var scanAllTests = []struct {
+	input  string
+	ranges []ColRange
+	err    error
+	output string
+}{
+	{"abc,def,ghi\njkl,mno,pqr\n", []ColRange{{2, 2}}, nil, "def\nmno\n"},
+}
+
+func TestScanAll(t *testing.T) {
+	for _, test := range scanAllTests {
+		outBuf := new(bytes.Buffer)
+		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
+		c.Ranges = test.ranges
+		if err := c.ScanAll(); err != test.err {
+			t.Errorf("expected return value %#v but got %#v", test.err, err)
+		}
+		if outString := outBuf.String(); outString != test.output {
+			t.Errorf("expected output %#v but got %#v", test.output, outString)
+
+		}
+	}
+}
