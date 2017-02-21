@@ -29,6 +29,7 @@ var scanTests = []struct {
 	{"abc,def,ghi", []ColRange{{3, EOL}}, nil, "ghi\n"},
 	{"abc,def,ghi", []ColRange{{4, EOL}}, nil, "\n"},
 	{"abc,def,ghi", []ColRange{}, nil, "\n"},
+	{"abc,def,ghi,j\"k", []ColRange{{2, 4}}, nil, "def,ghi,\"j\"\"k\"\n"},
 }
 
 func TestScan(t *testing.T) {

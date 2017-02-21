@@ -31,6 +31,7 @@ func NewCutter(r io.Reader, w io.Writer) *Cutter {
 		o: csv.NewWriter(w),
 	}
 	c.i.FieldsPerRecord = -1
+	c.i.LazyQuotes = true
 	return c
 }
 
