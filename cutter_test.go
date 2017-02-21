@@ -69,3 +69,29 @@ func TestScanAll(t *testing.T) {
 		}
 	}
 }
+
+var setDelimiterTests = []struct {
+	input     string
+	ranges    []ColRange
+	delimiter rune
+	err       error
+	output    string
+}{
+	{"abc;def,ghi;123\njkl;mno,pqr;45678\n", []ColRange{{2, 2}}, ';', nil, "def,ghi\nmno,pqr\n"},
+}
+
+func TestSetDelimiter(t *testing.T) {
+	for _, test := range setDelimiterTests {
+		outBuf := new(bytes.Buffer)
+		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
+		c.Ranges = test.ranges
+		c.SetDelimiter(test.delimiter)
+		if err := c.ScanAll(); err != test.err {
+			t.Errorf("expected return value %#v but got %#v", test.err, err)
+		}
+		if outString := outBuf.String(); outString != test.output {
+			t.Errorf("expected output %#v but got %#v", test.output, outString)
+
+		}
+	}
+}
