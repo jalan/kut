@@ -53,7 +53,11 @@ var scanAllTests = []struct {
 	err    error
 	output string
 }{
+	{"abc,def,ghi\njkl,mn\ro,pqr\n", []ColRange{{2, 2}}, nil, "def\n\"mn\ro\"\n"},
+	{"abc,def,ghi\njkl,mno,pqr", []ColRange{{2, 2}}, nil, "def\nmno\n"},
 	{"abc,def,ghi\njkl,mno,pqr\n", []ColRange{{2, 2}}, nil, "def\nmno\n"},
+	{"abc,def,ghi\r\njkl,mno,pqr", []ColRange{{2, 2}}, nil, "def\nmno\n"},
+	{"abc,def,ghi\r\njkl,mno,pqr\r\n", []ColRange{{2, 2}}, nil, "def\nmno\n"},
 }
 
 func TestScanAll(t *testing.T) {
