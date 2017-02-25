@@ -33,15 +33,15 @@ var scanTests = []struct {
 }
 
 func TestScan(t *testing.T) {
-	for _, test := range scanTests {
+	for i, test := range scanTests {
 		outBuf := new(bytes.Buffer)
 		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
 		c.Ranges = test.ranges
 		if err := c.Scan(); err != test.err {
-			t.Errorf("expected return value %#v but got %#v", test.err, err)
+			t.Errorf("TestScan %v: expected return value %#v but got %#v", i, test.err, err)
 		}
 		if outString := outBuf.String(); outString != test.output {
-			t.Errorf("expected output %#v but got %#v", test.output, outString)
+			t.Errorf("TestScan %v: expected output %#v but got %#v", i, test.output, outString)
 
 		}
 	}
@@ -61,15 +61,15 @@ var scanAllTests = []struct {
 }
 
 func TestScanAll(t *testing.T) {
-	for _, test := range scanAllTests {
+	for i, test := range scanAllTests {
 		outBuf := new(bytes.Buffer)
 		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
 		c.Ranges = test.ranges
 		if err := c.ScanAll(); err != test.err {
-			t.Errorf("expected return value %#v but got %#v", test.err, err)
+			t.Errorf("TestScanAll %v: expected return value %#v but got %#v", i, test.err, err)
 		}
 		if outString := outBuf.String(); outString != test.output {
-			t.Errorf("expected output %#v but got %#v", test.output, outString)
+			t.Errorf("TestScanAll %v: expected output %#v but got %#v", i, test.output, outString)
 
 		}
 	}
@@ -86,16 +86,16 @@ var setDelimiterTests = []struct {
 }
 
 func TestSetDelimiter(t *testing.T) {
-	for _, test := range setDelimiterTests {
+	for i, test := range setDelimiterTests {
 		outBuf := new(bytes.Buffer)
 		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
 		c.Ranges = test.ranges
 		c.SetDelimiter(test.delimiter)
 		if err := c.ScanAll(); err != test.err {
-			t.Errorf("expected return value %#v but got %#v", test.err, err)
+			t.Errorf("TestSetDelimiter %v: expected return value %#v but got %#v", i, test.err, err)
 		}
 		if outString := outBuf.String(); outString != test.output {
-			t.Errorf("expected output %#v but got %#v", test.output, outString)
+			t.Errorf("TestSetDelimiter %v: expected output %#v but got %#v", i, test.output, outString)
 
 		}
 	}
