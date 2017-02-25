@@ -2,6 +2,7 @@
 package kut
 
 import (
+	"bufio"
 	"encoding/csv"
 	"io"
 )
@@ -16,9 +17,13 @@ type ColRange struct {
 // EOL can be used as the End in a ColRange to include all remaining columns.
 const EOL = int(^uint(0) >> 1)
 
+const lf = byte('\n')
+const cr = byte('\r')
+
 // A Cutter reads from an input CSV file and writes only the specified columns
 // to an output file.
 type Cutter struct {
+	buf    *bufio.Reader
 	i      *csv.Reader
 	o      *csv.Writer
 	Ranges []ColRange
@@ -26,9 +31,11 @@ type Cutter struct {
 
 // NewCutter returns a Cutter that reads from r and writes to w.
 func NewCutter(r io.Reader, w io.Writer) *Cutter {
+	bufReader := bufio.NewReader(r)
 	c := &Cutter{
-		i: csv.NewReader(r),
-		o: csv.NewWriter(w),
+		buf: bufReader,
+		i:   csv.NewReader(bufReader),
+		o:   csv.NewWriter(w),
 	}
 	c.i.FieldsPerRecord = -1
 	c.i.LazyQuotes = true
@@ -54,8 +61,30 @@ func (c *Cutter) Scan() error {
 	return c.flush()
 }
 
+// This is like csv.Reader.Read, except it doesn't skip blank-line records,
+// instead returning a nil slice in that case.
+func (c *Cutter) read() ([]string, error) {
+	bytes, err := c.buf.Peek(1)
+	if err != nil {
+		return nil, err
+	}
+	if bytes[0] == lf {
+		c.buf.Discard(1)
+		return nil, nil
+	}
+	bytes, err = c.buf.Peek(2)
+	if err != nil {
+		return nil, err
+	}
+	if bytes[0] == cr && bytes[1] == lf {
+		c.buf.Discard(2)
+		return nil, nil
+	}
+	return c.i.Read()
+}
+
 func (c *Cutter) scan() error {
-	inputRecord, err := c.i.Read()
+	inputRecord, err := c.read()
 	if err != nil {
 		return err
 	}
