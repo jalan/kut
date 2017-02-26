@@ -38,7 +38,7 @@ func TestScan(t *testing.T) {
 		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
 		c.Ranges = test.ranges
 		if err := c.Scan(); err != test.err {
-			t.Errorf("TestScan %v: expected return value %#v but got %#v", i, test.err, err)
+			t.Errorf("TestScan %v: expected error %#v but got %#v", i, test.err, err)
 		}
 		if outString := outBuf.String(); outString != test.output {
 			t.Errorf("TestScan %v: expected output %#v but got %#v", i, test.output, outString)
@@ -68,7 +68,7 @@ func TestScanAll(t *testing.T) {
 		c := NewCutter(bytes.NewBufferString(test.input), outBuf)
 		c.Ranges = test.ranges
 		if err := c.ScanAll(); err != test.err {
-			t.Errorf("TestScanAll %v: expected return value %#v but got %#v", i, test.err, err)
+			t.Errorf("TestScanAll %v: expected error %#v but got %#v", i, test.err, err)
 		}
 		if outString := outBuf.String(); outString != test.output {
 			t.Errorf("TestScanAll %v: expected output %#v but got %#v", i, test.output, outString)
@@ -94,7 +94,7 @@ func TestSetDelimiter(t *testing.T) {
 		c.Ranges = test.ranges
 		c.SetDelimiter(test.delimiter)
 		if err := c.ScanAll(); err != test.err {
-			t.Errorf("TestSetDelimiter %v: expected return value %#v but got %#v", i, test.err, err)
+			t.Errorf("TestSetDelimiter %v: expected error %#v but got %#v", i, test.err, err)
 		}
 		if outString := outBuf.String(); outString != test.output {
 			t.Errorf("TestSetDelimiter %v: expected output %#v but got %#v", i, test.output, outString)
