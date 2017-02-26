@@ -50,11 +50,11 @@ var parseToColRangeTests = []struct {
 	input  string
 	output kut.ColRange
 }{
-	{"-10", kut.ColRange{1, 10}},
-	{"1", kut.ColRange{1, 1}},
-	{"100-", kut.ColRange{100, kut.EOL}},
-	{"12-12", kut.ColRange{12, 12}},
-	{"2-5", kut.ColRange{2, 5}},
+	{"-10", kut.ColRange{Start: 1, End: 10}},
+	{"1", kut.ColRange{Start: 1, End: 1}},
+	{"100-", kut.ColRange{Start: 100, End: kut.EOL}},
+	{"12-12", kut.ColRange{Start: 12, End: 12}},
+	{"2-5", kut.ColRange{Start: 2, End: 5}},
 }
 
 var parseToColRangeInvalidInputs = []string{
@@ -96,14 +96,14 @@ var parseToListTests = []struct {
 	input  string
 	output []kut.ColRange
 }{
-	{"-1", []kut.ColRange{{1, 1}}},
-	{"1", []kut.ColRange{{1, 1}}},
-	{"1,1", []kut.ColRange{{1, 1}}},
-	{"1,2", []kut.ColRange{{1, 1}, {2, 2}}},
-	{"1-", []kut.ColRange{{1, kut.EOL}}},
-	{"1-1", []kut.ColRange{{1, 1}}},
-	{"2,5-9,12-", []kut.ColRange{{2, 2}, {5, 9}, {12, kut.EOL}}},
-	{"5-9", []kut.ColRange{{5, 9}}},
+	{"-1", []kut.ColRange{{Start: 1, End: 1}}},
+	{"1", []kut.ColRange{{Start: 1, End: 1}}},
+	{"1,1", []kut.ColRange{{Start: 1, End: 1}}},
+	{"1,2", []kut.ColRange{{Start: 1, End: 1}, {Start: 2, End: 2}}},
+	{"1-", []kut.ColRange{{Start: 1, End: kut.EOL}}},
+	{"1-1", []kut.ColRange{{Start: 1, End: 1}}},
+	{"2,5-9,12-", []kut.ColRange{{Start: 2, End: 2}, {Start: 5, End: 9}, {Start: 12, End: kut.EOL}}},
+	{"5-9", []kut.ColRange{{Start: 5, End: 9}}},
 }
 
 var parseToListInvalidInputs = []string{
@@ -144,7 +144,7 @@ var parseArgsTests = []struct {
 	input  []string
 	output []kut.ColRange
 }{
-	{[]string{"kut", "5-9"}, []kut.ColRange{{5, 9}}},
+	{[]string{"kut", "5-9"}, []kut.ColRange{{Start: 5, End: 9}}},
 }
 
 var parseArgsInvalidInputs = [][]string{
