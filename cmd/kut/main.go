@@ -27,7 +27,7 @@ func parseToColRange(s string) (kut.ColRange, error) {
 	} else {
 		cr.Start, err = parseToColNum(parts[0])
 		if err != nil {
-			return cr, err
+			return kut.ColRange{}, err
 		}
 	}
 
@@ -38,13 +38,13 @@ func parseToColRange(s string) (kut.ColRange, error) {
 	} else {
 		cr.End, err = parseToColNum(parts[1])
 		if err != nil {
-			return cr, err
+			return kut.ColRange{}, err
 		}
 	}
 
 	// Other invalid cases not caught above
 	if s == "" || s == "-" || cr.Start > cr.End {
-		return cr, fmt.Errorf("invalid column range: %v", s)
+		return kut.ColRange{}, fmt.Errorf("invalid column range: %v", s)
 	}
 
 	return cr, nil
