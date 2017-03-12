@@ -102,3 +102,13 @@ func TestSetDelimiter(t *testing.T) {
 		}
 	}
 }
+
+func TestDelimiter(t *testing.T) {
+	want := '日'
+	buf := new(bytes.Buffer)
+	c := NewCutter(buf, buf)
+	c.SetDelimiter(want)
+	if got := c.Delimiter(); got != want {
+		t.Errorf("TestDelimiter: expected %q but got %q", want, got)
+	}
+}

@@ -119,8 +119,13 @@ func (c *Cutter) ScanAll() error {
 	return c.flush()
 }
 
-// SetDelimiter sets the input and output delimiter, which defaults to a comma.
+// SetDelimiter sets the field delimiter, which defaults to a comma.
 func (c *Cutter) SetDelimiter(d rune) {
 	c.i.Comma = d
 	c.o.Comma = d
+}
+
+// Delimiter returns the field delimiter.
+func (c *Cutter) Delimiter() rune {
+	return c.i.Comma
 }
