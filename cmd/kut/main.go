@@ -8,6 +8,23 @@ import (
 	"strings"
 )
 
+const help = `Usage: kut [OPTION] LIST
+
+kut is a cut command for CSV (RFC 4180) input. kut reads from standard input
+and writes to standard output.
+
+LIST is a list of ranges separated by commas, using the same rules as cut(1).
+
+Options:
+  -d, --delimiter=DELIM    Use DELIM as field delimiters instead of commas.
+  -h, --help               Show this help message.
+`
+
+func showHelp() {
+	fmt.Print(help)
+	os.Exit(0)
+}
+
 func parseToColNum(s string) (int, error) {
 	colNum, err := strconv.Atoi(s)
 	if err != nil || s[0] == '+' || s[0] == '-' || colNum == 0 {
