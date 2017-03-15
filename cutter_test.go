@@ -20,6 +20,7 @@ var scanTests = []struct {
 }{
 	{"", []ColRange{}, io.EOF, ""},
 	{"\n", []ColRange{}, nil, "\n"},
+	{"\r\n", []ColRange{}, nil, "\n"},
 	{"abc", []ColRange{{1, 1}}, nil, "abc\n"},
 	{"abc,def,ghi", []ColRange{{1, 1}, {3, 3}}, nil, "abc,ghi\n"},
 	{"abc,def,ghi", []ColRange{{1, EOL}}, nil, "abc,def,ghi\n"},
