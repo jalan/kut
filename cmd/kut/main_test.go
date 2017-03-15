@@ -124,26 +124,60 @@ func TestParseToList(t *testing.T) {
 
 var parseArgsTests = []struct {
 	input   []string
-	output  []kut.ColRange
+	delim   rune
+	crs     []kut.ColRange
 	wantErr bool
 }{
-	{[]string{"kut", "5-9"}, []kut.ColRange{{Start: 5, End: 9}}, false},
-	{[]string{"kut", "1-3", "7"}, nil, true},
-	{[]string{"kut", "file"}, nil, true},
-	{[]string{"kut"}, nil, true},
+	{[]string{"--delimiter", ".", "2"}, '.', []kut.ColRange{{Start: 2, End: 2}}, false},
+	{[]string{"--what", "2"}, 0, nil, true},
+	{[]string{"-d", ".", "2"}, '.', []kut.ColRange{{Start: 2, End: 2}}, false},
+	{[]string{"1-3", "7"}, 0, nil, true},
+	{[]string{"5-9"}, ',', []kut.ColRange{{Start: 5, End: 9}}, false},
+	{[]string{"file"}, 0, nil, true},
+	{[]string{}, 0, nil, true},
 }
 
 func TestParseArgs(t *testing.T) {
 	for _, test := range parseArgsTests {
-		output, err := parseArgs(test.input)
+		delim, crs, err := parseArgs(test.input)
 		if test.wantErr && err == nil {
 			t.Errorf("parseArgs(%#v): expected an error but got nil", test.input)
 		}
 		if !test.wantErr && err != nil {
 			t.Errorf("parseArgs(%#v): expected nil error but got %#v", test.input, err)
 		}
-		if !reflect.DeepEqual(output, test.output) {
-			t.Errorf("parseArgs(%#v): expected output %#v but got %#v", test.input, test.output, output)
+		if delim != test.delim {
+			t.Errorf("parseArgs(%#v): expected delimiter %q but got %q", test.input, test.delim, delim)
+		}
+		if !reflect.DeepEqual(crs, test.crs) {
+			t.Errorf("parseArgs(%#v): expected output %#v but got %#v", test.input, test.crs, crs)
+		}
+	}
+}
+
+var stringToDelimiterTests = []struct {
+	input   string
+	output  rune
+	wantErr bool
+}{
+	{";", ';', false},
+	{"\uFFFD", 0, true},
+	{"\x80", 0, true},
+	{"nope", 0, true},
+	{"日", '日', false},
+}
+
+func TestStringToDelimiter(t *testing.T) {
+	for _, test := range stringToDelimiterTests {
+		output, err := stringToDelimiter(test.input)
+		if test.wantErr && err == nil {
+			t.Errorf("stringToDelimiter(%#v): expected an error but got nil", test.input)
+		}
+		if !test.wantErr && err != nil {
+			t.Errorf("stringToDelimiter(%#v): expected nil error but got %#v", test.input, err)
+		}
+		if test.output != output {
+			t.Errorf("stringToDelimiter(%#v): expected output %#v but got %#v", test.input, test.output, output)
 		}
 	}
 }

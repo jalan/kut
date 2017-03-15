@@ -1,11 +1,14 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/jalan/kut"
+	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 const help = `Usage: kut [OPTION] LIST
@@ -19,11 +22,6 @@ Options:
   -d, --delimiter=DELIM    Use DELIM as field delimiters instead of commas.
   -h, --help               Show this help message.
 `
-
-func showHelp() {
-	fmt.Print(help)
-	os.Exit(0)
-}
 
 func parseToColNum(s string) (int, error) {
 	colNum, err := strconv.Atoi(s)
@@ -90,31 +88,60 @@ func parseToList(s string) ([]kut.ColRange, error) {
 	return crs, nil
 }
 
-func parseArgs(args []string) ([]kut.ColRange, error) {
-	if len(args) != 2 {
-		return nil, fmt.Errorf("invalid number of arguments")
+func stringToDelimiter(s string) (rune, error) {
+	if utf8.RuneCountInString(s) != 1 {
+		return 0, fmt.Errorf("delimiter must be a single rune")
 	}
-	crs, err := parseToList(args[1])
-	if err != nil {
-		return nil, err
+	d, _ := utf8.DecodeRuneInString(s)
+	if d == utf8.RuneError {
+		return 0, fmt.Errorf("delimiter must be valid UTF-8")
 	}
-	return crs, nil
+	return d, nil
 }
 
-func die(err error) {
-	fmt.Fprintln(os.Stderr, "kut:", err)
-	os.Exit(1)
+func parseArgs(args []string) (rune, []kut.ColRange, error) {
+	var delimStr string
+	flagSet := flag.NewFlagSet("kut", flag.ContinueOnError)
+	flagSet.SetOutput(ioutil.Discard)
+	flagSet.StringVar(&delimStr, "d", ",", "")
+	flagSet.StringVar(&delimStr, "delimiter", ",", "")
+	err := flagSet.Parse(args)
+	if err == flag.ErrHelp {
+		return 0, nil, err
+	}
+	if err != nil {
+		return 0, nil, fmt.Errorf("invalid option")
+	}
+	delim, err := stringToDelimiter(delimStr)
+	if err != nil {
+		return 0, nil, fmt.Errorf("invalid delimiter")
+	}
+	if len(flagSet.Args()) != 1 {
+		return 0, nil, fmt.Errorf("invalid number of arguments")
+	}
+	crs, err := parseToList(flagSet.Arg(0))
+	if err != nil {
+		return 0, nil, err
+	}
+	return delim, crs, nil
 }
 
 func main() {
-	crs, err := parseArgs(os.Args)
+	delim, crs, err := parseArgs(os.Args[1:])
+	if err == flag.ErrHelp {
+		fmt.Print(help)
+		os.Exit(0)
+	}
 	if err != nil {
-		die(err)
+		fmt.Fprintln(os.Stderr, "kut:", err)
+		os.Exit(1)
 	}
 	c := kut.NewCutter(os.Stdin, os.Stdout)
+	c.SetDelimiter(delim)
 	c.Ranges = crs
 	err = c.ScanAll()
 	if err != nil {
-		die(err)
+		fmt.Fprintln(os.Stderr, "kut:", err)
+		os.Exit(2)
 	}
 }
