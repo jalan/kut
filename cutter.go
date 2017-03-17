@@ -65,18 +65,12 @@ func (c *Cutter) Scan() error {
 // instead returning a nil slice in that case.
 func (c *Cutter) read() ([]string, error) {
 	bytes, err := c.buf.Peek(1)
-	if err != nil {
-		return nil, err
-	}
-	if bytes[0] == lf {
+	if err == nil && bytes[0] == lf {
 		c.buf.Discard(1)
 		return nil, nil
 	}
 	bytes, err = c.buf.Peek(2)
-	if err != nil {
-		return nil, err
-	}
-	if bytes[0] == cr && bytes[1] == lf {
+	if err == nil && bytes[0] == cr && bytes[1] == lf {
 		c.buf.Discard(2)
 		return nil, nil
 	}

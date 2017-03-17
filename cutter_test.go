@@ -56,6 +56,7 @@ var scanAllTests = []struct {
 }{
 	{"1,2,3\n\n\n1,2,3", []ColRange{{2, 2}}, nil, "2\n\n\n2\n"},
 	{"\n\n\n", []ColRange{{2, 2}}, nil, "\n\n\n"},
+	{"a\na", []ColRange{{1, 5}}, nil, "a\na\n"},
 	{"abc,def,ghi\njkl,mn\ro,pqr\n", []ColRange{{2, 2}}, nil, "def\n\"mn\ro\"\n"},
 	{"abc,def,ghi\njkl,mno,pqr", []ColRange{{2, 2}}, nil, "def\nmno\n"},
 	{"abc,def,ghi\njkl,mno,pqr\n", []ColRange{{2, 2}}, nil, "def\nmno\n"},
