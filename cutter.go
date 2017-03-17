@@ -20,8 +20,8 @@ const EOL = int(^uint(0) >> 1)
 const lf = byte('\n')
 const cr = byte('\r')
 
-// A Cutter reads from an input CSV file and writes only the specified columns
-// to an output file.
+// A Cutter reads from an input CSV and writes only the specified columns to an
+// output CSV.
 type Cutter struct {
 	buf    *bufio.Reader
 	i      *csv.Reader
