@@ -28,6 +28,12 @@ solve this problem, but kut
 
 ## How
 
+Download a binary:
+
+ - [linux x86_64](https://github.com/jalan/kut/releases/download/v1.0.0/kut_1.0.0_linux_x86_64)
+
+Or build one yourself:
+
 ```
 go install github.com/jalan/kut/cmd/kut
 ```
