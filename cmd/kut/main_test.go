@@ -131,6 +131,8 @@ var parseArgsTests = []struct {
 	{[]string{"--delimiter", ".", "2"}, '.', []kut.ColRange{{Start: 2, End: 2}}, false},
 	{[]string{"--what", "2"}, 0, nil, true},
 	{[]string{"-d", ".", "2"}, '.', []kut.ColRange{{Start: 2, End: 2}}, false},
+	{[]string{"-d", "blah", "1,2,3"}, 0, nil, true},
+	{[]string{"-h"}, 0, nil, true},
 	{[]string{"1-3", "7"}, 0, nil, true},
 	{[]string{"5-9"}, ',', []kut.ColRange{{Start: 5, End: 9}}, false},
 	{[]string{"file"}, 0, nil, true},
