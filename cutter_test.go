@@ -2,6 +2,7 @@ package kut
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"testing"
 )
@@ -76,6 +77,21 @@ func TestScanAll(t *testing.T) {
 			t.Errorf("TestScanAll %v: expected output %#v but got %#v", i, test.output, outString)
 
 		}
+	}
+}
+
+type BrokenReader struct{}
+
+func (br *BrokenReader) Read(p []byte) (n int, err error) {
+	return 0, errors.New("this reader never works")
+}
+
+func TestScanAllUnknownError(t *testing.T) {
+	in := new(BrokenReader)
+	out := new(bytes.Buffer)
+	c := NewCutter(in, out)
+	if err := c.ScanAll(); err == nil {
+		t.Errorf("TestScanAllUnknownError: expected an error but got nil")
 	}
 }
 
