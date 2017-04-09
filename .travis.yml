@@ -3,4 +3,4 @@ before_install:
   - go get github.com/mattn/goveralls
 script:
   - go test -v ./...
-  - ${HOME}/gopath/bin/goveralls -service=travis-ci
+  - ${HOME}/gopath/bin/goveralls -ignore main.go -service=travis-ci
