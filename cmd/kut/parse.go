@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/jalan/kut"
 	"io/ioutil"
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/jalan/kut"
 )
 
 func parseToColNum(s string) (int, error) {

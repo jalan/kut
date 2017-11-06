@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/jalan/kut"
 	"os"
+
+	"github.com/jalan/kut"
 )
 
 const help = `Usage: kut [OPTION] LIST

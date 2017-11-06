@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/jalan/kut"
 	"reflect"
 	"testing"
+
+	"github.com/jalan/kut"
 )
 
 var parseToColNumTests = []struct {
