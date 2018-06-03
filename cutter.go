@@ -39,6 +39,7 @@ func NewCutter(r io.Reader, w io.Writer) *Cutter {
 	}
 	c.i.FieldsPerRecord = -1
 	c.i.LazyQuotes = true
+	c.i.ReuseRecord = true
 	return c
 }
 
