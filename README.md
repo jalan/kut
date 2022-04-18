@@ -1,9 +1,8 @@
 # kut
 
 [![Docs](https://godoc.org/github.com/jalan/kut?status.svg)](https://godoc.org/github.com/jalan/kut)
-[![Build Status](https://travis-ci.org/jalan/kut.svg?branch=master)](https://travis-ci.org/jalan/kut)
-[![Coverage Status](https://coveralls.io/repos/github/jalan/kut/badge.svg?branch=master)](https://coveralls.io/github/jalan/kut?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/jalan/kut)](https://goreportcard.com/report/github.com/jalan/kut)
+[![Tests](https://github.com/jalan/kut/workflows/tests/badge.svg)](https://github.com/jalan/kut/actions)
+[![Report Card](https://goreportcard.com/badge/github.com/jalan/kut)](https://goreportcard.com/report/github.com/jalan/kut)
 
 ```
 $ kut -h

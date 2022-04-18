@@ -1,9 +1,0 @@
-language: go
-go:
-  - "1.11.x"
-  - "1.10.x"
-before_install:
-  - go get github.com/mattn/goveralls
-script:
-  - go test -v ./...
-  - ${HOME}/gopath/bin/goveralls -ignore cmd/kut/main.go -service=travis-ci
