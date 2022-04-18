@@ -99,8 +99,8 @@ func (c *Cutter) flush() error {
 }
 
 // ScanAll advances to the end of the input, outputting only the columns
-// specified in Ranges. Because ScanAll deliberately reads until EOF, it does
-// not report EOF as an error.
+// specified in Ranges. Because ScanAll deliberately reads until io.EOF, it does
+// not report io.EOF as an error.
 func (c *Cutter) ScanAll() error {
 	for {
 		err := c.scan()
